@@ -123,11 +123,12 @@
                         <div class="col-sm-12 message-main-receiver">
                             <div class="receiver">
                                 <div class="message-text" ng-if="name=='url'">
-                                    {{name}}: <a href="{{detail}}">{{detail}}</a>
+                                    {{name}}:
+                                    <a href="{{detail}}">{{detail}}</a>
                                 </div>
                                 <div class="message-text" ng-if="name!='url'">
-                                        {{name}}: {{detail}}
-                                    </div>
+                                    {{name}}: {{detail}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -161,16 +162,18 @@
                 </div>
 
                 <div class="row reply">
-                    <!-- <div class="col-sm-1 col-xs-1 reply-emojis">
-                        <i class="fa fa-smile-o fa-2x"></i>
-                    </div> -->
-                    <div class="col-sm-9 col-xs-9 reply-main">
+                    <div class="col-sm-3 col-xs-3 reply-emojis">
+                        <label>
+                            <input type="checkbox" ng-model="md_comment_soultion"> Mark as Solution
+                        </label>
+                    </div>
+                    <div class="col-sm-8 col-xs-8 reply-main">
                         <input type="text" class="form-control" ng-disabled="session==null || !activeSession.online" placeholder="{{session==null || !activeSession.online?'Connection lost.. reconnecting..':''}}"
                             rows="1" ng-model="md_comment" ng-keyup='$event.keyCode == 13 && addUserMessage(activeSession.session)'>
                     </div>
-                    <div class="col-sm-1 col-xs-1 reply-recording">
+                    <!-- <div class="col-sm-1 col-xs-1 reply-recording">
                         <i class="fa fa-paperclip fa-2x" aria-hidden="true"></i>
-                    </div>
+                    </div> -->
                     <div class="col-sm-1 col-xs-1 reply-send" ng-click="addUserMessage(activeSession.session)">
                         <i class="fa fa-send fa-2x" aria-hidden="true"></i>
                     </div>

@@ -183,6 +183,7 @@ chartModule.directive('ail0Chat', function () {
                             $scope.session.close();
                             $scope.connectionActive = false;
                             $scope.message="";
+                            $scope.clientAgent.messages=[];
                         } catch (e) { }
                     }
                 },

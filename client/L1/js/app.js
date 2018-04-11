@@ -20,6 +20,7 @@
             // }
         };
         $scope.md_comment = "";
+        $scope.md_comment_soultion=false;
         $scope.activeSession = null;
         $scope.sessionId = (Math.round(Math.random() * 1000000000)).toString(36);
 
@@ -39,8 +40,14 @@
                     session: $scope.sessionId,
                     text: $scope.md_comment
                 };
+
+                if($scope.md_comment_soultion){
+                    msg.tag="solution";
+                }
+
                 $scope.sessions[session].messages.push(msg);
                 $scope.md_comment = "";
+                $scope.md_comment_soultion=false;
                 $scope.session.send(JSON.stringify(msg));
 
                 $timeout(function(){

@@ -13,8 +13,6 @@
         "less-middleware": "1.0.x",
         "morgan": "~1.6.1",
         "recastai": "latest",
-        "ws": "latest",
-        "mime": "^2.2.2",
-        "multer": "1.1.0"
+        "ws": "latest"
     }
 }
