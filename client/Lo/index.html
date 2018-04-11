@@ -1,0 +1,210 @@
+<html ng-app="testApp">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+</head>
+
+<body ng-controller="chat">
+    <div id="recast-webchat-div">
+        <div class="RecastApp">
+            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css">
+            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css">
+            <div class="RecastAppExpander" ng-click="showChat = true" style="color: rgb(255, 255, 255); background-color: #4A90E2;">
+                <img class="RecastAppExpander--logo" src="https://cdn.recast.ai/webchat/webchat-logo.svg">
+                <div class="RecastAppExpander--onboarding" ng-if="clientAgent.onboarding">{{clientAgent.onboarding}}</div>
+            </div>
+            <div class="RecastAppChat" ng-show="showChat" style="background-color: rgb(255, 255, 255);">
+                <div class="RecastAppHeader" style="color: rgb(255, 255, 255); background-color: #4A90E2;">
+                    <img class="RecastAppHeader--logo" src="https://cdn.recast.ai/webchat/webchat-logo.svg">
+                    <div class="RecastAppHeader--title">AIL.0 Chat</div>
+                    <div class="RecastAppHeader--btn" ng-click="showChat = false">
+                        <img src="https://cdn.recast.ai/webchat/close.svg">
+                    </div>
+                </div>
+                <div class="RecastAppChat--content">
+                    <div class="RecastAppLive">
+                        <div class="RecastAppLive--message-container">
+                            <div class="RecastAppMessageContainer" ng-repeat="msg in clientAgent.messages" ng-class="msg.type">
+                                <div class="RecastAppMessage" ng-class="msg.type">
+                                    <img ng-if="msg.type != 'bot'" class="RecastAppMessage--logo visible" src="https://cdn.recast.ai/webchat/user.png">
+                                    <img ng-if="msg.type == 'bot'" class="RecastAppMessage--logo visible" src="https://cdn.recast.ai/webchat/bot.png">
+                                    <div class="RecastAppQuickReplies">
+                                        <div class="RecastAppText" style="color: rgb(112, 112, 112); background-color: rgb(246, 246, 246); opacity: 1;" ng-bind="msg.text"></div>
+                                    </div>
+
+                                    <div ng-if="msg.quick.selected" class="slick-initialized slick-slider RecastAppSlider RecastAppQuickReplies--slider">
+
+                                        <div class="RecastAppArrow prev slick-arrow slick-prev slick-disabled" style="display: block;">
+                                            <img src="https://cdn.recast.ai/webchat/left-arrow.svg" class="arrowSvg">
+                                        </div>
+
+
+                                        <div class="slick-list">
+                                            <div class="slick-track" style="opacity: 1; transform: translate3d(-5px, 0px, 0px); width: 1740px;">
+                                                <div ng-repeat="btn in msg.quick.options" ng-click="selectOption(btn,msg)" class="slick-slide slick-active RecastAppQuickReplies--button" data-index="0" tabindex="-1" style="outline: none; border: 1px solid rgb(224, 90, 71); color: rgb(224, 90, 71);">{{btn.title}}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="RecastAppArrow next slick-arrow slick-next" style="display: block;">
+                                            <img src="https://cdn.recast.ai/webchat/right-arrow.svg" class="arrowSvg">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="RecastAppChat--slogan">We run with AIL.0</div>
+                </div>
+                <div class="RecastAppInput">
+                    <form>
+                        <input type="text" ng-model="typeText" ng-keyup="$event.keyCode == 13 && addUserMessage()" placeholder="Write a reply..."
+                            style="width: 100%;">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        var app = angular.module("testApp", []);
+
+        app.controller("chat", function ($scope, $interval) {
+            $scope.typeText = "";
+            $scope.showChat = false;
+
+            $scope.clientAgent = {
+                onboarding: "",
+                messages: [
+                    {
+                        type: "user",
+                        text: "qweqw"
+                    },
+                    {
+                        type: "bot",
+                        text: "qwewq",
+                        quick: {
+                            type: "button",
+                            options: [
+                                {
+                                    text: "",
+                                    value: ""
+                                }
+                            ]
+                        }
+                    }
+                    ,
+                    {
+                        type: "agent",
+                        text: "adsaasd"
+                    }
+                ]
+            };
+
+            $scope.selectOption=function(option,msg){
+                msg.selected=option;
+                
+            };
+
+            $scope.addUserMessage = function () {
+                $scope.clientAgent.messages.push({
+                    type: "user",
+                    text: $scope.typeText
+                });
+                $scope.typeText = '';
+            };
+
+            $scope.addAgentMessage = function (text) {
+                $scope.clientAgent.messages.push({
+                    type: "agent",
+                    text: text
+                });
+            };
+
+            $scope.addBotMessage = function (text) {
+                $scope.clientAgent.messages.push({
+                    type: "bot",
+                    text: text,
+                    quick: {
+                        type: "button",
+                        options: [
+                            {
+                                text: "",
+                                value: ""
+                            }
+                        ]
+                    }
+                });
+            };
+
+
+
+
+            //                                            $interval(function () {
+            //                                                $scope.addBotMessage("hello again.");
+            //                                                $scope.addAgentMessage("sadasda");
+            //                                            }, 2000);
+        });
+
+
+
+
+
+
+
+//                                        app.directive('ail0Chat', function () {
+//                                            return {
+//                                                restrict: 'E',
+//                                                template: "<div id='recast-webchat-div'>" +
+//                                                        "    <div class='RecastApp'>" +
+//                                                        "        <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css'>" +
+//                                                        "        <link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css'>" +
+//                                                        "        <div class='RecastAppExpander' style='color: rgb(255, 255, 255); background-color: #4A90E2;'>" +
+//                                                        "            <img class='RecastAppExpander--logo' src='https://cdn.recast.ai/webchat/webchat-logo.svg'>" +
+//                                                        "        </div>" +
+//                                                        "        <div class='RecastAppChat' style='background-color: rgb(255, 255, 255);'>" +
+//                                                        "            <div class='RecastAppHeader' style='color: rgb(255, 255, 255); background-color: #4A90E2;'>" +
+//                                                        "                <img class='RecastAppHeader--logo' src='https://cdn.recast.ai/webchat/webchat-logo.svg'>" +
+//                                                        "                <div class='RecastAppHeader--title'>AIL.0 Chat</div>" +
+//                                                        "                <div class='RecastAppHeader--btn'>" +
+//                                                        "                    <img src='https://cdn.recast.ai/webchat/close.svg'>" +
+//                                                        "                </div>" +
+//                                                        "            </div>" +
+//                                                        "            <div class='RecastAppChat--content'>" +
+//                                                        "                <div class='RecastAppLive'>" +
+//                                                        "                    <div class='RecastAppLive--message-container'>" +
+//                                                        "                    </div>" +
+//                                                        "                </div>" +
+//                                                        "                <div class='RecastAppChat--slogan'>We run with AIL.0</div>" +
+//                                                        "            </div>" +
+//                                                        "            <div class='RecastAppInput'>" +
+//                                                        "                <form>" +
+//                                                        "                    <input type='text' id='input-msg' value='' placeholder='Write a reply...' style='width: 100%;'>" +
+//                                                        "                </form>" +
+//                                                        "            </div>" +
+//                                                        "        </div>" +
+//                                                        "    </div>" +
+//                                                        "</div>",
+//                                                link: function (scope, element) {
+//                                                    var recastChat = new fnRecastChat(".RecastAppLive--message-container", {});
+//                                                    recastChat.addBotMsg({
+//                                                        text: "Hey! How may I help you today?"
+//                                                    });
+//                                                }
+//                                            };
+//                                        });
+
+
+//                                        var recastChat = new fnRecastChat(".RecastAppLive--message-container", {});
+//                                        recastChat.addBotMsg({
+//                                            text: "Hey! How may I help you today?"
+//                                        });
+    </script>
+
+</body>
+
+</html>
