@@ -18,8 +18,8 @@ AiEngine.prototype.start = function () {
 
 AiEngine.prototype._checkInternalSolution = function (message) {
     var res;
-
-    var his = this.history.reverse();
+    var histClone = this.history.slice(0,this.history.length);
+    var his = histClone.reverse();
     for (var i in his) {
         if (his[i].from == "user") {
 
